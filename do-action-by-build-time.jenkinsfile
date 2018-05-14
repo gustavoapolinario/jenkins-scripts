@@ -1,0 +1,31 @@
+pipeline {
+    
+    agent any
+    
+    stages {
+        stage('Wait time') {
+            steps {
+                sleep 60
+            }
+        }
+    }
+	post {
+        always {
+            echo "Build Duration: ${currentBuild.duration} ms"
+            
+            script {
+                //Compare in Seconds
+                def alertTimeInSeconds = 60
+                if( currentBuild.duration > alertTimeInSeconds * 1000 ) {
+                    echo "Do some things here, like send mail ou slack notification"
+                }
+                
+                //Same if, but in minutes
+                def alertTimeInMinutes = 1
+                if( currentBuild.duration > alertTimeInMinutes * 60000 ) {
+                    echo "Do some things here, like send mail ou slack notification"
+                }
+            }
+        }
+    }
+}

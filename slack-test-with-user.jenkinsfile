@@ -1,0 +1,30 @@
+/*
+ * To Run this job you need:
+ * Slack plugin installed
+ * Integration Jenkins-Slack configured
+ * Remove "Use Groovy Sandbox" checkbox in job
+*/
+def getBuildUser() {
+    return currentBuild.rawBuild.getCause(Cause.UserIdCause).getUserId()
+}
+
+pipeline {
+    environment {
+        BUILD_USER = ''
+    }
+    agent any
+    
+    stages {
+        stage('Slack Message') {
+            steps {
+                script {
+                    BUILD_USER = getBuildUser()
+                }
+                slackSend channel: '#jenkins',
+                    color: 'good',
+                    message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${BUILD_USER}\n More info at: ${env.BUILD_URL}"
+            
+            }
+        }
+    }
+}

@@ -1,0 +1,19 @@
+/*
+ * To Run this job you need:
+ * Nodejs plugin installed
+ * Nodejs configure as "node"
+*/
+
+pipeline {
+  agent any
+ 
+  tools {nodejs “node”}
+ 
+  stages {
+    stage(‘Example’) {
+      steps {
+        sh ‘npm config ls’
+      }
+    }
+  }
+}
