@@ -1,0 +1,24 @@
+import jenkins.model.Jenkins
+
+def getLastSuccessfulBuildNumber(jobName) {
+    def item = Jenkins.instance.getItemByFullName(jobName) 
+    def lastSuccessfulBuild = item.getLastSuccessfulBuild()
+    return lastSuccessfulBuild.number
+}
+
+pipeline {
+    agent any
+    
+    stages {
+        
+        stage('Get Last Successful Build Number') {
+            environment {
+                build_number = ""
+            }
+            steps {
+                echo "" + getLastSuccessfulBuildNumber("job-name")
+            }
+        }
+		
+    }
+}
