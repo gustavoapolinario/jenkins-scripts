@@ -1,0 +1,30 @@
+import jenkins.model.Jenkins
+
+def getLastBuildResult(jobName) {
+    echo jobName
+    def item = Jenkins.instance.getItemByFullName(jobName) 
+    def lastSuccessfulBuild = item.getLastBuild()
+    return lastSuccessfulBuild.getResult()
+}
+
+pipeline {
+    agent any
+    
+    stages {
+        
+        stage('Test Params') {
+            steps {
+                script {
+                    if( getLastBuildResult("job-name") != Result.SUCCESS ) {
+                        echo "BUILD QUEBRADO"
+                        input message: 'Build Failed. You Want Continue?'
+                    }
+                    else {
+                        echo "BUILD OK"
+                    }
+                }
+            }
+        }
+		
+    }
+}
