@@ -1,0 +1,26 @@
+import jenkins.model.Jenkins
+
+def getBuildResult(jobName, buildNumber) {
+    echo jobName
+    def item = Jenkins.instance.getItemByFullName(jobName) 
+    def lastSuccessfulBuild = item.getBuild(buildNumber)
+    return lastSuccessfulBuild.getResult()
+}
+
+pipeline {
+    agent any
+    
+    stages {
+        
+        stage('Verify Build') {
+            steps {
+                script {
+                    if( getBuildResult("job-name", "666") != Result.SUCCESS ) {
+                        input message: 'Build Failed. Continue?'
+                    }
+                }
+            }
+        }
+		
+    }
+}
