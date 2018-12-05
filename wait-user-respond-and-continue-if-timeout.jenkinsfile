@@ -1,0 +1,52 @@
+pipeline {
+    agent any
+    
+    environment {
+        returned = false
+    }
+    
+    stages {
+        stage('Wait time') {
+            steps {
+				script {
+					try {
+						timeout(time: 10, unit: 'SECONDS') {
+						    
+						    returned = input(message: 'Continue?', ok: 'Continue', 
+                                parameters: [
+                                    booleanParam(defaultValue: true, 
+                                    description: 'Continue the steps',
+                                    name: 'Yes?')
+                                ])
+						    
+						}
+					}
+				    catch(err) {
+                        def user = err.getCauses()[0].getUser()
+                        
+                        if (user.toString() == 'SYSTEM') {
+                            //if timeout, continue or fail job?
+                            echo "Timeout. Continuing"
+                            returned = true
+                        }
+                        else {
+                            echo "Button Abort clicked"
+                            returned = false
+                        }
+				    }
+				    echo "Value: " + returned
+				}
+            }
+        }
+		stage('Next step') {
+		    when {
+                anyOf {
+                    expression { returned == true }
+                }
+		    }
+			steps {
+				echo "time lapsed or button Yes is clicked"
+			}
+		}
+    }
+}
