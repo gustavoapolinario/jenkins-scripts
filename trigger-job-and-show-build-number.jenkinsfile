@@ -1,0 +1,14 @@
+pipeline {
+    agent any
+    
+    stages {
+    	stage('Build Other Job') {
+    	    steps {
+    	        script {
+	                JOB = build job: 'test-get-last-build-number', propagate: false
+	                echo '' + JOB.getNumber()
+    	        }
+    	    }
+    	}
+    }
+}

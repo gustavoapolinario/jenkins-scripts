@@ -1,0 +1,33 @@
+pipeline {
+    agent any
+    
+    parameters {
+        string(name: 'CODES', defaultValue: '', description: 'Codes separated by comma? ex: (1,2,3)', trim: true)
+    }
+    
+    stages {
+        
+        stage('Verify Params not empty') {
+            when {
+                anyOf {
+                    expression { params.CODES == null }
+                    expression { params.CODES == "" }
+                }
+            }
+            steps {
+                error("**********************************\nParameter is needed\n**********************************")
+            }
+        }
+        
+    	stage('Split String') {
+    	    steps {
+    	        script {
+        	        for (VALUE in params.CODES.split(',')) {
+        	            echo VALUE
+                    }
+    	        }
+    	    }
+    	}
+		
+    }
+}

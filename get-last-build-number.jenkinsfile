@@ -1,0 +1,20 @@
+import jenkins.model.Jenkins
+
+def getLastBuildNumber(jobName) {
+    def item = Jenkins.instance.getItemByFullName(jobName) 
+    def build = item.getLastBuild()
+    return '' + build.getNumber()
+}
+
+pipeline {
+    agent any
+    
+    stages {
+        
+        stage('Get Last Build Number') {
+            steps {
+                echo getLastBuildNumber("job-name")
+            }
+        }
+    }
+}

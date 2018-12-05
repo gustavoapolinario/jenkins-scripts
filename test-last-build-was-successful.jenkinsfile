@@ -12,11 +12,11 @@ pipeline {
     
     stages {
         
-        stage('Test Params') {
+        stage('Test Latest Build') {
             steps {
                 script {
                     if( getLastBuildResult("job-name") != Result.SUCCESS ) {
-                        echo "BUILD QUEBRADO"
+                        echo "BUILD FAILED"
                         input message: 'Build Failed. You Want Continue?'
                     }
                     else {
